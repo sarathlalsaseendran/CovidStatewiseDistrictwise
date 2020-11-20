@@ -1,0 +1,20 @@
+tbody {
+    height: 450px;
+    overflow-y: auto;
+}
+
+thead>tr, tbody {
+    display: block;
+}
+
+.margin-class {
+    margin: 7px;
+}
+
+.aParent div {
+    float: left;
+    clear: none; 
+}
+.img {
+    width: 40px;
+}
