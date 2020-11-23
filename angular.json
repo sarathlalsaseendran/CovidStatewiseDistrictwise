@@ -123,5 +123,8 @@
       }
     }
   },
-  "defaultProject": "Covid19IndianTracker"
+  "defaultProject": "Covid19IndianTracker",
+  "cli": {
+    "analytics": false
+  }
 }
