@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "MuruganApp1": {
+    "Covid19IndianTracker": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/MuruganApp1",
+            "outputPath": "dist/Covid19IndianTracker",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -63,18 +63,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "MuruganApp1:build"
+            "browserTarget": "Covid19IndianTracker:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "MuruganApp1:build:production"
+              "browserTarget": "Covid19IndianTracker:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "MuruganApp1:build"
+            "browserTarget": "Covid19IndianTracker:build"
           }
         },
         "test": {
@@ -112,16 +112,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "MuruganApp1:serve"
+            "devServerTarget": "Covid19IndianTracker:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "MuruganApp1:serve:production"
+              "devServerTarget": "Covid19IndianTracker:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "MuruganApp1"
+  "defaultProject": "Covid19IndianTracker"
 }

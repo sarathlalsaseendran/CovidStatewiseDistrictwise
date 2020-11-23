@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/MuruganApp1",
+    "public": "dist/Covid19IndianTracker",
     "ignore": [
       "firebase.json",
       "**/.*",

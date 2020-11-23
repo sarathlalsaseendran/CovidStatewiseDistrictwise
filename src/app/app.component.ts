@@ -9,7 +9,7 @@ import { DataService } from './data.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'MuruganApp1';
+  title = 'Covid19IndianTracker';
 
   date: Date;
   selectedOption: string;
