@@ -1,165 +1,148 @@
-<div class="row margin-class">
-  <img src="../assets/2659980.png" class="img">&nbsp;
-  <h5><span class="badge badge-primary">Covid-19 Date-wise, State-wise, and District-wise Tracker By Sarathlal</span>
-  </h5>
-</div>
-<div class="row col-9 margin-class">
-  <div class="col-4">
-    <div class="aParent">
-      <div>
-        <h6><span class="badge badge-secondary"> Choose a date</span></h6>
-      </div>
-      <div>
-        &nbsp;&nbsp;
-      </div>
-      <div>
-        <h5><span class="badge badge-secondary"> {{date | date}}</span></h5>
-      </div>
-    </div>
-    <input matInput [matDatepicker]="datevalue" name="datevalue" [(ngModel)]="date" placeholder="Choose a date"
-      (dateChange)="dateChanged()" [matDatepickerFilter]="postDateFilter">
-    <mat-datepicker-toggle [for]="datevalue"></mat-datepicker-toggle>
-    <mat-datepicker #datevalue></mat-datepicker>
-  </div>
-  <div class="col-3" *ngIf="districtData == undefined">
-    <div>
-      <h6><span class="badge badge-secondary">Show data order by</span></h6>
-    </div>
-    <div>
+<!-- top banner -->
+<mat-toolbar color="primary">
+  <img src="../assets/2659980.png" class="img" />
+  <span
+    >Covid-19 Date-wise, State-wise, and District-wise Tracker By
+    Sarathlal</span
+  >
+  <span class="example-spacer"></span>
+</mat-toolbar>
 
-    </div>
-    <mat-form-field appearance="fill">
-      <mat-label>Choose an order</mat-label>
-      <mat-select [(value)]="selectedOption" (selectionChange)="onOptionChanged()">
-        <mat-option value="name">State Name</mat-option>
-        <mat-option value="population">Population</mat-option>
-        <mat-option value="test">Total Tests</mat-option>
-        <mat-option value="confirmed">Confirmed</mat-option>
-        <mat-option value="deltaConfirmed">Newly Confirmed</mat-option>
-        <mat-option value="recovered">Recovered</mat-option>
-        <mat-option value="deceased">Deceased</mat-option>
-        <mat-option value="percentage">Percentage</mat-option>
-        <mat-option value="deltaPercentage">Daily Percentage</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+<table class="formtable">
+  <tr>
+    <td>
+      <!-- date picker -->
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [(ngModel)]="date"
+          (dateChange)="dateChanged()"
+          [matDatepickerFilter]="postDateFilter"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </td>
+    <td>
+      <!-- dropdown -->
+      <mat-form-field appearance="fill">
+        <mat-label>Choose an order</mat-label>
+        <mat-select
+          [(value)]="selectedOption"
+          (selectionChange)="onOptionChanged()"
+        >
+          <mat-option value="name">State Name</mat-option>
+          <mat-option value="population">Population</mat-option>
+          <mat-option value="test">Total Tests</mat-option>
+          <mat-option value="confirmed">Confirmed</mat-option>
+          <mat-option value="deltaConfirmed">Newly Confirmed</mat-option>
+          <mat-option value="recovered">Recovered</mat-option>
+          <mat-option value="deceased">Deceased</mat-option>
+          <mat-option value="percentage">Percentage</mat-option>
+          <mat-option value="deltaPercentage">Daily Percentage</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+  </tr>
+</table>
+<!-- search input -->
+<div fxLayout fxLayoutAlign="center center">
+  <mat-form-field fxFlex="40%">
+    <input
+      matInput
+      type="text"
+      (keyup)="doFilter($event.target.value)"
+      placeholder="Filter"
+    />
+  </mat-form-field>
 </div>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <!-- StateName Column -->
+    <ng-container matColumnDef="stateName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>StateName</th>
+      <td mat-cell *matCellDef="let element">
+        <b
+          ><i>{{ element.stateName }}</i></b
+        >
+      </td>
+    </ng-container>
+    <!-- Population Column -->
+    <ng-container matColumnDef="population">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Population</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.population | number }}
+      </td>
+    </ng-container>
+    <!-- Tested Column -->
+    <ng-container matColumnDef="tested">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Tested</th>
+      <td mat-cell *matCellDef="let element">
+        <p>{{ element.tested | number }}</p>
+        <span class="badge badge-info">
+          + {{ element.deltaTested | number }}</span
+        >
+      </td></ng-container
+    >
 
-<div class="row margin-class" *ngIf="districtData == undefined">
-  <div class="col-10">
-
-    <table class="table table-hover">
-      <thead>
-        <tr class="d-flex">
-          <th class="col-1">Sl.No.</th>
-          <th class="col-3">State Name</th>
-          <th class="col-2">Population</th>
-          <th class="col-1">Tests</th>
-          <th class="col-1">Confirmed</th>
-          <th class="col-1">Percentage</th>
-          <th class="col-1">Recovered</th>
-          <th class="col-1">Deceased</th>
-          <th class="col-1">Districts</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of displayData; let i=index" class="d-flex">
-          <td class="col-1"> <b><i>{{i+1}}</i></b></td>
-          <td class="col-3"> <b><i>{{data.stateName}}</i></b></td>
-          <td class="col-2"> {{data.population | number}} </td>
-          <td class="col-1">{{data.tested | number}} <h6><span class="badge badge-info"> +
-                {{data.deltaTested | number}}</span>
-            </h6>
-          </td>
-          <td class="col-1">{{data.confirmed | number}}<h6><span class="badge badge-warning"> +
-                {{data.deltaConfirmed | number}}</span></h6>
-          </td>
-          <td class="col-1">{{data.percentage}} <h6><span class="badge badge-secondary"> +
-                {{data.deltaPercentage}}</span>
-            </h6>
-          </td>
-          <td class="col-1">{{data.recovered | number}}<h6><span class="badge badge-success"> +
-                {{data.deltaRecovered | number}}</span></h6>
-          </td>
-          <td class="col-1">{{data.deceased | number}}<h6><span class="badge badge-danger"> +
-                {{data.deltaDeceased | number}}</span></h6>
-          </td>
-          <td class="col-1"> <button class="btn-primary" (click)="selectState(data.stateCode)">Show</button> </td>
-        </tr>
-        <tr class="d-flex">
-          <td class="col-1"><b><i>Total</i></b></td>
-          <td class="col-3"> <b><i>{{indiaSummaryData?.stateName}}</i></b></td>
-          <td class="col-2"> {{indiaSummaryData?.population | number}} </td>
-          <td class="col-1">{{indiaSummaryData?.tested | number}} <h6><span class="badge badge-info"> +
-                {{indiaSummaryData?.deltaTested | number}}</span></h6>
-          </td>
-          <td class="col-1">{{indiaSummaryData?.confirmed | number}}<h6><span class="badge badge-warning"> +
-                {{indiaSummaryData?.deltaConfirmed | number}}</span></h6>
-          </td>
-          <td class="col-1">{{indiaSummaryData?.percentage | number}}<h6><span class="badge badge-secondary"> +
-                {{indiaSummaryData?.deltaPercentage | number}}</span></h6>
-          </td>
-          <td class="col-1">{{indiaSummaryData?.recovered | number}}<h6><span class="badge badge-success"> +
-                {{indiaSummaryData?.deletaRecovered | number}}</span></h6>
-          </td>
-          <td class="col-1">{{indiaSummaryData?.deceased | number}}<h6><span class="badge badge-danger"> +
-                {{indiaSummaryData?.deltaDeceased | number}}</span></h6>
-          </td>
-          <td class="col-1"></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="row margin-class" *ngIf="districtData != undefined">
-  <div class="col-6">
-    <div class="aParent">
-      <div>
-        <b>State</b>
-      </div>
-      <div>
-        &nbsp;&nbsp;
-      </div>
-      <div>
-        <h5><span class="badge badge-secondary">
-            {{stateName}}</span></h5>
-      </div>
-    </div>
-
-  </div>
-</div>
-<div class="row margin-class" *ngIf="districtData != undefined">
-  <div class="col-6">
-    <table class="table table-hover">
-      <thead>
-        <tr class="d-flex">
-          <th class="col-4">District Name</th>
-          <th class="col-2">Population</th>
-          <th class="col-2">Confirmed</th>
-          <th class="col-2">Recovered</th>
-          <th class="col-2">Deceased</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of districtData | keyvalue" class="d-flex">
-          <td class="col-4"> <b><i>{{data?.key}}</i></b></td>
-          <td class="col-2"> {{nullCheck(data?.value?.meta?.population) | number}} </td>
-          <td class="col-2">{{nullCheck(data?.value?.total?.confirmed) | number}}<h6><span class="badge badge-warning">
-                +
-                {{nullCheck(data?.value?.delta?.confirmed) | number}}</span></h6>
-          </td>
-          <td class="col-2">{{nullCheck(data?.value?.total?.recovered) | number}}<h6><span class="badge badge-success">
-                +
-                {{nullCheck(data?.value?.delta?.recovered) | number}}</span></h6>
-          </td>
-          <td class="col-2">{{nullCheck(data?.value?.total?.deceased) | number}}<h6><span class="badge badge-danger"> +
-                {{nullCheck(data?.value?.delta?.deceased) | number}}</span></h6>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="row margin-class" *ngIf="districtData != undefined">
-  <button class="btn-secondary" (click)="back()">Back to State List</button>
+    <!-- Confirmed Column -->
+    <ng-container matColumnDef="confirmed">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Confirmed</th>
+      <td mat-cell *matCellDef="let element">
+        <p>{{ element.confirmed | number }}</p>
+        <span class="badge badge-warning">
+          + {{ element.deltaConfirmed | number }}
+        </span>
+      </td>
+    </ng-container>
+    <!-- Percentage column-->
+    <ng-container matColumnDef="percentage">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Percentage</th>
+      <td mat-cell *matCellDef="let element">
+        <P>{{ element.percentage | number }}</P>
+        <span class="badge badge-secondary">
+          +{{ element.deltaPercentage | number }}
+        </span>
+      </td>
+    </ng-container>
+    <!-- recovered column -->
+    <ng-container matColumnDef="recovered">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Recovered</th>
+      <td mat-cell *matCellDef="let element">
+        <p>{{ element.recovered | number }}</p>
+        <span class="badge badge-success">
+          + {{ element.deltaRecovered | number }}
+        </span>
+      </td>
+    </ng-container>
+    <!-- Deceased column-->
+    <ng-container matColumnDef="deceased">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Deceased</th>
+      <td mat-cell *matCellDef="let element">
+        <p>{{ element.deceased | number }}</p>
+        <span class="badge badge-danger">
+          +{{ element.deltaDeceased | number }}
+        </span>
+      </td>
+    </ng-container>
+    <!-- districts column-->
+    <ng-container matColumnDef="districts">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Districts</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="showDistricts(element.stateCode)">
+          <mat-icon aria-hidden="false" aria-label="show districts"
+            >arrow_right_alt</mat-icon
+          >
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
 </div>
